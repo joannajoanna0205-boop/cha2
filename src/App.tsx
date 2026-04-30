@@ -26,7 +26,7 @@ export default function App() {
           <main className="container mx-auto px-4 py-8">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
+              <Route path="/orders" element={<Orders />} />
               <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
               <Route path="/admin/*" element={<PrivateRoute adminOnly><Admin /></PrivateRoute>} />
             </Routes>
