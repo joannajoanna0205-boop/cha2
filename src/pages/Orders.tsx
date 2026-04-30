@@ -12,10 +12,17 @@ const Orders: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    const guestId = localStorage.getItem('tea_guest_id');
+    const effectiveUserId = user?.uid || guestId;
+
+    if (!effectiveUserId) {
+      setLoading(false);
+      return;
+    }
+
     const q = query(
       collection(db, 'orders'), 
-      where('userId', '==', user.uid),
+      where('userId', '==', effectiveUserId),
       orderBy('createdAt', 'desc')
     );
     const unsub = onSnapshot(q, (snapshot) => {
