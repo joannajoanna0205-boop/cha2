@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A drink item in the menu",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "priceM": { "type": "number" },
+        "priceL": { "type": "number" },
+        "available": { "type": "boolean" },
+        "description": { "type": "string" }
+      },
+      "required": ["name", "categoryId", "priceM", "priceL"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Menu category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "order"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "ready", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "notes": { "type": "string" }
+      },
+      "required": ["userId", "items", "totalAmount", "status", "createdAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Member profile",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "points": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": { "schema": "Product", "description": "Menu items" },
+    "/categories/{categoryId}": { "schema": "Category", "description": "Menu categories" },
+    "/orders/{orderId}": { "schema": "Order", "description": "Customer orders" },
+    "/users/{userId}": { "schema": "User", "description": "User profiles" }
+  }
+}
