@@ -21,17 +21,18 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ cart, onRemove, clearCart }) 
   const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   const handleCheckout = async () => {
-    if (!user) {
-      alert('請先登入以完成訂單');
-      return;
-    }
     if (cart.length === 0) return;
 
     setLoading(true);
     try {
+      const guestId = localStorage.getItem('tea_guest_id') || `guest_${Math.random().toString(36).slice(2, 11)}`;
+      if (!localStorage.getItem('tea_guest_id')) {
+        localStorage.setItem('tea_guest_id', guestId);
+      }
+
       const order: Order = {
-        userId: user.uid,
-        userName: user.displayName || 'Guest',
+        userId: user?.uid || guestId,
+        userName: user?.displayName || '訪客外帶',
         items: cart,
         totalAmount: total,
         status: OrderStatus.PENDING,
@@ -46,7 +47,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ cart, onRemove, clearCart }) 
       setTimeout(() => setSuccess(false), 5000);
     } catch (error) {
       console.error('Checkout failed:', error);
-      alert('下單失敗，請稍後再試');
+      handleFirestoreError(error, OperationType.WRITE, 'orders');
     } finally {
       setLoading(false);
     }
