@@ -59,8 +59,8 @@ service cloud.firestore {
 
     // Orders
     match /orders/{orderId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read: if (resource.data.userId == request.auth.uid) || isAdmin() || (request.query.limit <= 100); // Allow guest list with caution or specific filters
+      allow create: if true; // Allow guests to create orders
       allow update: if isAdmin();
     }
   }
